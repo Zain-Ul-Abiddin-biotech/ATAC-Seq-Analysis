@@ -1,12 +1,6 @@
 # 🧬 scATAC-seq Analysis Pipeline & Interactive EDA App
 ## Human PBMCs — 10x Genomics ATACv2 (10k cells)
 
-> **Acknowledgement:** Portions of this pipeline were adapted from code and
-> concepts demonstrated in the
-> **[Bioinformagician YouTube channel](https://www.youtube.com/@Bioinformagician)**.
-> Their scATAC-seq tutorial walkthrough was instrumental in shaping the
-> structure of `ATACSeq_complete_pipeline.R`. Full credit to the channel
-> for making high-quality bioinformatics education publicly available.
 
 ---
 
