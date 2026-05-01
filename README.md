@@ -2,11 +2,7 @@
 ## Human PBMCs — 10x Genomics ATACv2 (10,000 cells)
 ### A Beginner's Complete Guide to the Methods, Results & Code
 
-> **Acknowledgement:** Portions of this pipeline were adapted from code and
-> concepts demonstrated in the **[Bioinformagician YouTube channel](https://www.youtube.com/@Bioinformagician)**.
-> Their scATAC-seq tutorial series was instrumental in shaping the structure
-> of `ATACSeq_complete_pipeline.R`. Full credit to the channel for making
-> high-quality bioinformatics education freely accessible.
+
 
 ---
 
