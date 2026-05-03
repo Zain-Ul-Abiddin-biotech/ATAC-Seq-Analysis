@@ -288,15 +288,12 @@ saveRDS(pbmc, file = "data/pbmc_atac_part1.rds")
 cat("Part 1 saved → data/pbmc_atac_part1.rds\n")
 
 
-# ============================================================
-# PART 2 — DOWNSTREAM WORKFLOW
-# ============================================================
+
 
 # Reload Part 1 if starting here fresh:
-pbmc <- readRDS("data/pbmc_atac_part1.rds")
-
-pbmc
-DimPlot(object = pbmc, label = TRUE) + NoLegend()
+#pbmc <- readRDS("data/pbmc_atac_part1.rds")
+#pbmc
+#DimPlot(object = pbmc, label = TRUE) + NoLegend()
 
 
 # ── 7. Gene Activity Scoring ─────────────────────────────────
