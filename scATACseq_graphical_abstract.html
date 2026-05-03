@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>scATAC-seq Graphical Abstract</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500;600;700&display=swap');
+
+  :root {
+    --navy:    #0a1628;
+    --deep:    #0d2240;
+    --mid:     #1a3a5c;
+    --teal:    #0fb4c8;
+    --cyan:    #4dd8e8;
+    --green:   #2ecc8e;
+    --amber:   #f5a623;
+    --coral:   #ff6b6b;
+    --purple:  #9b6dff;
+    --white:   #f0f6ff;
+    --dim:     #8aaabb;
+    --card:    rgba(255,255,255,0.04);
+    --border:  rgba(15,180,200,0.18);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    width: 1200px;
+    min-height: 680px;
+    background: var(--navy);
+    font-family: 'DM Sans', sans-serif;
+    color: var(--white);
+    overflow: hidden;
+    position: relative;
+  }
+
+  /* ── animated background grid ── */
+  body::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(15,180,200,0.05) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(15,180,200,0.05) 1px, transparent 1px);
+    background-size: 40px 40px;
+    z-index: 0;
+  }
+
+  /* ── large radial glow behind centre ── */
+  body::after {
+    content: '';
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%,-50%);
+    width: 700px; height: 700px;
+    background: radial-gradient(circle, rgba(15,180,200,0.10) 0%, transparent 70%);
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  .canvas {
+    position: relative;
+    z-index: 1;
+    width: 1200px;
+    padding: 36px 48px 30px;
+  }
+
+  /* ════════ HEADER ════════ */
+  .header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: 28px;
+  }
+
+  .title-block { max-width: 680px; }
+
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(15,180,200,0.12);
+    border: 1px solid var(--teal);
+    border-radius: 20px;
+    padding: 3px 12px;
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    color: var(--teal);
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+  .badge-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--teal);
+               animation: pulse 2s infinite; }
+  @keyframes pulse {
+    0%,100% { opacity:1; transform: scale(1); }
+    50%      { opacity:.4; transform: scale(0.7); }
+  }
+
+  .main-title {
+    font-size: 26px;
+    font-weight: 700;
+    line-height: 1.25;
+    color: var(--white);
+    letter-spacing: -0.3px;
+  }
+  .main-title span { color: var(--teal); }
+
+  .subtitle {
+    margin-top: 6px;
+    font-size: 13px;
+    color: var(--dim);
+    font-weight: 400;
+    letter-spacing: 0.3px;
+  }
+
+  .meta-pills {
+    display: flex;
+    gap: 8px;
+    margin-top: 12px;
+    flex-wrap: wrap;
+  }
+  .pill {
+    padding: 3px 10px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.4px;
+  }
+  .pill-teal   { background:rgba(15,180,200,0.15); color:var(--teal);   border:1px solid rgba(15,180,200,0.3); }
+  .pill-green  { background:rgba(46,204,142,0.15); color:var(--green);  border:1px solid rgba(46,204,142,0.3); }
+  .pill-amber  { background:rgba(245,166,35,0.15); color:var(--amber);  border:1px solid rgba(245,166,35,0.3); }
+  .pill-purple { background:rgba(155,109,255,0.15);color:var(--purple); border:1px solid rgba(155,109,255,0.3);}
+
+  .author-block {
+    text-align: right;
+  }
+  .author-name {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--white);
+    letter-spacing: 0.2px;
+  }
+  .author-sub {
+    font-size: 11px;
+    color: var(--dim);
+    margin-top: 3px;
+    line-height: 1.5;
+  }
+  .author-tag {
+    display: inline-block;
+    margin-top: 6px;
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    color: var(--teal);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 2px 8px;
+  }
+
+  /* ════════ DIVIDER ════════ */
+  .divider {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--teal), var(--purple), transparent);
+    margin-bottom: 24px;
+    opacity: 0.5;
+  }
+
+  /* ════════ PIPELINE FLOW ════════ */
+  .pipeline {
+    display: flex;
+    align-items: stretch;
+    gap: 0;
+    margin-bottom: 22px;
+  }
+
+  .step {
+    flex: 1;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 14px 12px 12px;
+    position: relative;
+    transition: all 0.2s;
+  }
+
+  /* connector arrow between steps */
+  .arrow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    flex-shrink: 0;
+  }
+  .arrow-svg { color: var(--teal); opacity: 0.6; }
+
+  .step-num {
+    font-family: 'Space Mono', monospace;
+    font-size: 9px;
+    color: var(--teal);
+    opacity: 0.7;
+    margin-bottom: 5px;
+    letter-spacing: 1px;
+  }
+  .step-icon {
+    font-size: 22px;
+    margin-bottom: 6px;
+    display: block;
+    line-height: 1;
+  }
+  .step-title {
+    font-size: 11.5px;
+    font-weight: 700;
+    color: var(--white);
+    margin-bottom: 4px;
+    line-height: 1.2;
+  }
+  .step-desc {
+    font-size: 10px;
+    color: var(--dim);
+    line-height: 1.45;
+  }
+  .step-tag {
+    display: inline-block;
+    margin-top: 7px;
+    font-family: 'Space Mono', monospace;
+    font-size: 9px;
+    padding: 2px 7px;
+    border-radius: 4px;
+    font-weight: 400;
+  }
+
+  /* colour themes per step */
+  .s1 { border-color: rgba(15,180,200,0.35); }
+  .s1 .step-tag { background:rgba(15,180,200,0.12); color:var(--teal); }
+
+  .s2 { border-color: rgba(46,204,142,0.35); }
+  .s2 .step-tag { background:rgba(46,204,142,0.12); color:var(--green); }
+
+  .s3 { border-color: rgba(245,166,35,0.35); }
+  .s3 .step-tag { background:rgba(245,166,35,0.12); color:var(--amber); }
+
+  .s4 { border-color: rgba(155,109,255,0.35); }
+  .s4 .step-tag { background:rgba(155,109,255,0.12); color:var(--purple); }
+
+  .s5 { border-color: rgba(255,107,107,0.35); }
+  .s5 .step-tag { background:rgba(255,107,107,0.12); color:var(--coral); }
+
+  .s6 { border-color: rgba(77,216,232,0.35); }
+  .s6 .step-tag { background:rgba(77,216,232,0.12); color:var(--cyan); }
+
+  /* ════════ BOTTOM ROW ════════ */
+  .bottom-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 14px;
+  }
+
+  /* ─ Results card ─ */
+  .results-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 14px 15px;
+  }
+  .card-heading {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--teal);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .card-heading::before {
+    content: '';
+    display: block;
+    width: 14px; height: 2px;
+    background: var(--teal);
+  }
+
+  /* cell type chips */
+  .celltypes {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+  }
+  .ct {
+    font-size: 10px;
+    padding: 3px 9px;
+    border-radius: 20px;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+  .ct-t    { background:rgba(77,216,232,0.12); color:var(--cyan);   border:1px solid rgba(77,216,232,0.25); }
+  .ct-b    { background:rgba(46,204,142,0.12); color:var(--green);  border:1px solid rgba(46,204,142,0.25); }
+  .ct-m    { background:rgba(245,166,35,0.12); color:var(--amber);  border:1px solid rgba(245,166,35,0.25); }
+  .ct-nk   { background:rgba(155,109,255,0.12);color:var(--purple); border:1px solid rgba(155,109,255,0.25);}
+  .ct-dc   { background:rgba(255,107,107,0.12);color:var(--coral);  border:1px solid rgba(255,107,107,0.25);}
+
+  /* ─ Stats card ─ */
+  .stats-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+  .stat-box {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 7px;
+    padding: 9px 10px;
+  }
+  .stat-val {
+    font-family: 'Space Mono', monospace;
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 1;
+  }
+  .stat-lbl {
+    font-size: 9.5px;
+    color: var(--dim);
+    margin-top: 3px;
+    line-height: 1.3;
+  }
+  .sv-teal   { color: var(--teal); }
+  .sv-green  { color: var(--green); }
+  .sv-amber  { color: var(--amber); }
+  .sv-purple { color: var(--purple); }
+
+  /* ─ Mini method key card ─ */
+  .methods-list { display: flex; flex-direction: column; gap: 7px; }
+  .method-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 9px;
+  }
+  .method-icon {
+    width: 26px; height: 26px;
+    border-radius: 6px;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    font-size: 13px;
+  }
+  .mi-teal   { background: rgba(15,180,200,0.15); }
+  .mi-green  { background: rgba(46,204,142,0.15); }
+  .mi-amber  { background: rgba(245,166,35,0.15); }
+  .mi-purple { background: rgba(155,109,255,0.15);}
+  .mi-coral  { background: rgba(255,107,107,0.15);}
+
+  .method-text {}
+  .method-name {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--white);
+    line-height: 1.2;
+  }
+  .method-brief {
+    font-size: 10px;
+    color: var(--dim);
+    line-height: 1.35;
+  }
+
+  /* ════════ FOOTER ════════ */
+  .footer {
+    margin-top: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 12px;
+    border-top: 1px solid rgba(255,255,255,0.07);
+  }
+  .footer-left {
+    font-size: 10px;
+    color: var(--dim);
+    line-height: 1.6;
+  }
+  .footer-right {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+  }
+  .tool-chip {
+    font-family: 'Space Mono', monospace;
+    font-size: 9.5px;
+    padding: 3px 9px;
+    border-radius: 4px;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    color: var(--dim);
+  }
+  .ack {
+    font-size: 9.5px;
+    color: rgba(138,170,187,0.6);
+    font-style: italic;
+  }
+</style>
+</head>
+<body>
+<div class="canvas">
+
+  <!-- ══ HEADER ══ -->
+  <div class="header">
+    <div class="title-block">
+      <div class="badge">
+        <span class="badge-dot"></span>
+        Single-Cell Genomics
+      </div>
+      <div class="main-title">
+        <span>scATAC-seq</span> Chromatin Accessibility<br/>
+        Analysis of Human PBMCs
+      </div>
+      <div class="subtitle">
+        10x Genomics ATACv2 · 10,246 cells · 165,376 peaks · hg38 / Ensembl v98
+      </div>
+      <div class="meta-pills">
+        <span class="pill pill-teal">TF-IDF Normalisation</span>
+        <span class="pill pill-green">LSI Dimensionality Reduction</span>
+        <span class="pill pill-amber">Leiden Clustering</span>
+        <span class="pill pill-purple">CCA Label Transfer</span>
+      </div>
+    </div>
+    <div class="author-block">
+      <div class="author-name">Zain Ul Abiddin</div>
+      <div class="author-sub">
+        MS Biotechnology<br/>
+        University of Management & Technology, Lahore
+      </div>
+      <div class="author-tag">github.com/ZainUlAbiddin</div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- ══ PIPELINE STEPS ══ -->
+  <div class="pipeline">
+
+    <div class="step s1">
+      <div class="step-num">01 / INPUT</div>
+      <span class="step-icon">📥</span>
+      <div class="step-title">Data Loading</div>
+      <div class="step-desc">Peak–barcode matrix (.h5) + fragment file (.tsv.gz) + CellRanger metadata</div>
+      <span class="step-tag">Read10X_h5()</span>
+    </div>
+
+    <div class="arrow">
+      <svg class="arrow-svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M5 12h14M13 6l6 6-6 6"/>
+      </svg>
+    </div>
+
+    <div class="step s2">
+      <div class="step-num">02 / QC</div>
+      <span class="step-icon">🔬</span>
+      <div class="step-title">Quality Control</div>
+      <div class="step-desc">TSS enrichment · Nucleosome signal · FRiP · Blacklist ratio · nCount filter</div>
+      <span class="step-tag">ATACqc()</span>
+    </div>
+
+    <div class="arrow">
+      <svg class="arrow-svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M5 12h14M13 6l6 6-6 6"/>
+      </svg>
+    </div>
+
+    <div class="step s3">
+      <div class="step-num">03 / NORM</div>
+      <span class="step-icon">⚗️</span>
+      <div class="step-title">TF-IDF + LSI</div>
+      <div class="step-desc">Term Freq–Inverse Doc Freq normalisation. SVD reduces 165k peaks → 30 components</div>
+      <span class="step-tag">RunTFIDF · RunSVD</span>
+    </div>
+
+    <div class="arrow">
+      <svg class="arrow-svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M5 12h14M13 6l6 6-6 6"/>
+      </svg>
+    </div>
+
+    <div class="step s4">
+      <div class="step-num">04 / CLUSTER</div>
+      <span class="step-icon">🗺️</span>
+      <div class="step-title">UMAP + Leiden</div>
+      <div class="step-desc">UMAP from LSI dims 2–30 (skip depth-correlated dim 1). Leiden: 15 clusters found</div>
+      <span class="step-tag">algorithm = 3</span>
+    </div>
+
+    <div class="arrow">
+      <svg class="arrow-svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M5 12h14M13 6l6 6-6 6"/>
+      </svg>
+    </div>
+
+    <div class="step s5">
+      <div class="step-num">05 / ANNOTATE</div>
+      <span class="step-icon">🏷️</span>
+      <div class="step-title">Label Transfer</div>
+      <div class="step-desc">CCA-based transfer from 10x PBMC scRNA-seq reference. Confidence filter > 0.5</div>
+      <span class="step-tag">FindTransferAnchors</span>
+    </div>
+
+    <div class="arrow">
+      <svg class="arrow-svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M5 12h14M13 6l6 6-6 6"/>
+      </svg>
+    </div>
+
+    <div class="step s6">
+      <div class="step-num">06 / OUTPUT</div>
+      <span class="step-icon">📊</span>
+      <div class="step-title">DA + Coverage</div>
+      <div class="step-desc">Logistic regression DA peaks. Coverage genome-browser plots per cell type</div>
+      <span class="step-tag">FindMarkers · LR</span>
+    </div>
+
+  </div>
+
+  <!-- ══ BOTTOM ROW ══ -->
+  <div class="bottom-row">
+
+    <!-- Cell types identified -->
+    <div class="results-card">
+      <div class="card-heading">14 Cell Populations Identified</div>
+      <div class="celltypes">
+        <span class="ct ct-t">CD4 Naive</span>
+        <span class="ct ct-t">CD4 Memory</span>
+        <span class="ct ct-t">CD8 Naive</span>
+        <span class="ct ct-t">CD8 Effector</span>
+        <span class="ct ct-t">DN T cell</span>
+        <span class="ct ct-nk">NK bright</span>
+        <span class="ct ct-nk">NK dim</span>
+        <span class="ct ct-m">CD14+ Mono</span>
+        <span class="ct ct-m">CD16+ Mono</span>
+        <span class="ct ct-dc">Dendritic</span>
+        <span class="ct ct-dc">pDC</span>
+        <span class="ct ct-b">B progenitor</span>
+        <span class="ct ct-b">pre-B cell</span>
+        <span class="ct ct-m">Platelet</span>
+      </div>
+    </div>
+
+    <!-- Dataset stats -->
+    <div class="results-card">
+      <div class="card-heading">Dataset Statistics</div>
+      <div class="stats-grid">
+        <div class="stat-box">
+          <div class="stat-val sv-teal">10,246</div>
+          <div class="stat-lbl">High-quality cells after QC</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-val sv-green">165,376</div>
+          <div class="stat-lbl">Chromatin peaks (std. chr only)</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-val sv-amber">15</div>
+          <div class="stat-lbl">Leiden clusters (res = 0.5)</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-val sv-purple">14</div>
+          <div class="stat-lbl">Annotated cell populations</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Key methods -->
+    <div class="results-card">
+      <div class="card-heading">Key Statistical Methods</div>
+      <div class="methods-list">
+        <div class="method-row">
+          <div class="method-icon mi-teal">📐</div>
+          <div class="method-text">
+            <div class="method-name">TF-IDF + SVD (LSI)</div>
+            <div class="method-brief">Upweights cell-type-specific peaks; removes depth artefact in component 1</div>
+          </div>
+        </div>
+        <div class="method-row">
+          <div class="method-icon mi-green">🔗</div>
+          <div class="method-text">
+            <div class="method-name">CCA Label Transfer</div>
+            <div class="method-brief">Cross-modality anchor finding; transfers RNA cell types to ATAC clusters</div>
+          </div>
+        </div>
+        <div class="method-row">
+          <div class="method-icon mi-amber">📈</div>
+          <div class="method-text">
+            <div class="method-name">Logistic Regression DA</div>
+            <div class="method-brief">Controls for sequencing depth (latent var) when testing differential accessibility</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ══ FOOTER ══ -->
+  <div class="footer">
+    <div class="footer-left">
+      <strong style="color:var(--white)">Interactive Shiny EDA App included</strong> — explore any gene × chromosome × cell type combination<br/>
+      <span class="ack">Code structure partially inspired by the Bioinformagician YouTube channel</span>
+    </div>
+    <div class="footer-right">
+      <span class="tool-chip">R 4.6</span>
+      <span class="tool-chip">Signac v1.17</span>
+      <span class="tool-chip">Seurat v5</span>
+      <span class="tool-chip">10x ATACv2</span>
+      <span class="tool-chip">hg38</span>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>
