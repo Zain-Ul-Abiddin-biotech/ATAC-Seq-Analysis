@@ -1302,7 +1302,7 @@ shiny::runApp("Shiney_App_For_EDA.R")
 ## Acknowledgements
 
 - **[Bioinformagician (YouTube)](https://www.youtube.com/@Bioinformagician)** —
-  code structure and workflow design for the ATAC-seq pipeline
+  ATAC seq explanation and basic concept.
 - **[Signac / Stuart Lab](https://stuartlab.org/signac/)** — core toolkit and methods
 - **[10x Genomics](https://www.10xgenomics.com)** — PBMC ATACv2 dataset
 - **[Ensembl / EMBL-EBI](https://www.ensembl.org)** — hg38 gene annotations (v98)
